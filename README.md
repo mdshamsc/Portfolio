@@ -1,2 +1,2 @@
 # Portfolio
-My personal portfolio (temporary).
+My personal portfolio site (temporary).
