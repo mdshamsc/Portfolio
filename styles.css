@@ -79,7 +79,7 @@ p { margin: 0 0 1.1em; }
 .skip:focus { transform: none; }
 
 /* ---------- Canvas noise ---------- */
-#grid {
+#grid, #hover {
   position: fixed;
   inset: 0;
   width: 100%;
@@ -259,7 +259,7 @@ html:not(.js) .opt::before { display: none; }
 .no-hotkeys .topnav .k { display: none; }
 
 /* ---------- Command input (Claude Code style) ---------- */
-.cmd { width: min(var(--measure), 100%); margin: 0 auto; padding: 0 3ch 32px; }
+.cmd { position: relative; width: min(var(--measure), 100%); margin: 0 auto; padding: 0 3ch 32px; }
 .screen > .cmd { width: auto; margin: 0; padding: 0; }
 .cmd[hidden] { display: none; }
 .cmd p { margin: 0; }
@@ -306,7 +306,8 @@ html:not(.js) .opt::before { display: none; }
 .cmd-desc { min-width: 0; color: var(--dim); }
 .cmd-opt.is-sel::before { visibility: visible; color: var(--orange); }
 .cmd-opt.is-sel .cmd-name, .cmd-opt.is-sel .cmd-desc { color: var(--orange); }
-.cmd-hint { margin-top: .6em; padding: 0 2ch; color: var(--dim); }
+/* Overlays the space below the row: showing it must not move the layout. */
+.cmd-hint { position: absolute; left: 0; right: 0; top: 100%; margin-top: .6em; padding: 0 2ch; color: var(--dim); pointer-events: none; }
 .cmd-hint[hidden] { display: none; }
 .cmd-msg { padding: 0 2ch; color: var(--orange); }
 .cmd-msg:not(:empty) { margin-top: .6em; }
@@ -327,7 +328,9 @@ html:not(.js) .opt::before { display: none; }
   border: 0;
   background: none;
   cursor: zoom-in;
+  position: relative;
 }
+.img-fx { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; transition: opacity .25s ease; }
 .img-btn img {
   display: block;
   width: 100%;
@@ -350,9 +353,6 @@ html:not(.js) .opt::before { display: none; }
 .portrait .ascii { filter: none; }
 @media (hover: none) { .portrait .real { opacity: 0; } }
 
-/* reveal images with a stepped wipe while text decrypts */
-.screen.entering .img-btn img { animation: wipe .5s steps(8) .4s both; }
-@keyframes wipe { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0); } }
 
 /* ---------- Viewer ---------- */
 dialog {
@@ -429,7 +429,6 @@ dialog::backdrop { background: var(--bg); }
 @media (prefers-reduced-motion: reduce) {
   .live { animation: none; }
   .img-btn img, .portrait .real { transition: none; }
-  .screen.entering .img-btn img { animation: none; }
 }
 @media (forced-colors: active) {
   .opt.is-sel, .cmd-opt.is-sel { color: Highlight; }

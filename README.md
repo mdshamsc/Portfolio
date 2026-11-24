@@ -14,7 +14,7 @@ sitemap.xml
 CNAME          custom domain for GitHub Pages
 assets/fonts   IBM Plex Mono 400/600 (SIL Open Font License), self-hosted
 assets/img     two images per project (workN-bg, workN-sm) + portrait
-assets/audio   decrypt.m4a: 3.85 s of the reference decryption effect (voice cut out)
+assets/audio   decrypts.m4a: 3.85 s of the reference decryption effect (voice cut out)
 ```
 
 The big block titles (`.bigtext`) are plain text in `index.html`, built from `██` pixels. JS only scales them to fit.

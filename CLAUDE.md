@@ -25,7 +25,7 @@ Any static server works. Deploys as-is to GitHub Pages (`CNAME`, `.nojekyll`; `4
 - **Timing constants** are the `T` object at the top of `main.js`. Visual tokens (colors, the single font size `--fs`) are at the top of `styles.css`.
 - **Layout helpers**: `.rule` elements are filled with a repeated character to the measured monospace width (`fillRules`); `.bigtext` titles are plain `██` text in the HTML that JS scales to fit (`fitBig`). Both run on `layout()` per activate and on resize.
 - **Input**: single-key shortcuts use `data-key` attributes (`enter` = the screen's primary button), resolved on the active screen first, then `.topnav`. A HOTKEYS toggle disables them (WCAG 2.1.4). Keep this working when adding buttons.
-- **Sound**: `assets/audio/decrypt.m4a` through WebAudio with a synth fallback; handles autoplay blocking by playing the remainder after the first user gesture. State persists in `localStorage` via the `store` wrapper (try/catch for private mode).
+- **Sound**: `assets/audio/decrypts.m4a` through WebAudio with a synth fallback; handles autoplay blocking by playing the remainder after the first user gesture. State persists in `localStorage` via the `store` wrapper (try/catch for private mode).
 - **Image viewer**: `.img-btn` buttons with `data-full` open a native `<dialog id="viewer">`.
 - **Analytics**: Microsoft Clarity loads only if `window.CLARITY_ID` in `index.html` is non-empty. Events go through `track()`.
 

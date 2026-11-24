@@ -189,7 +189,98 @@
     let rt;
     addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(resize, 100); });
     resize();
-    return { noise, refresh, rebuild: () => { buildAtlas(); refresh(); } };
+    return { noise, refresh, holes, rebuild: () => { buildAtlas(); refresh(); } };
+  })();
+
+  // ---------- Pointer reveal (all screens) ----------
+  // Random glyphs fade in around the pointer, strongest right under it and
+  // dying off with distance. Content and HUD areas stay blank.
+  const Hover = (() => {
+    const cv = document.createElement('canvas');
+    cv.id = 'hover';
+    cv.setAttribute('aria-hidden', 'true');
+    $('#grid').after(cv);
+    const ctx = cv.getContext('2d');
+    const R = 16;           // radius in cells
+    const PEAK = 0.36; // opacity right under the pointer (kept low: decoration only)
+    const FOLLOW = 0.14;    // pointer smoothing per frame (lower = more lag)
+    const RISE = 0.12, FALL = 0.05; // per-cell ease in / out, so light trails the pointer
+    let dpr = 1, tx = -1, ty = -1, sx = -1, sy = -1, target = 0, raf = 0;
+    let al = new Float32Array(0), born = new Float64Array(0), life = new Float32Array(0), lines = [], cols = 0, rows = 0;
+    const DIGITS = '0123456789ABCDEF';
+    // Words from the whole site: cells scramble as digits, then settle on a letter of one.
+    const WORDS = [...new Set((document.body.textContent.match(/[A-Za-z]{3,12}/g) || []))];
+    function wordRow(n) {
+      let t = '';
+      while (t.length < n) t += WORDS[(Math.random() * WORDS.length) | 0] + ' ';
+      return t;
+    }
+
+    function size() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      cv.width = Math.ceil(innerWidth * dpr);
+      cv.height = Math.ceil(innerHeight * dpr);
+      cols = Math.ceil(innerWidth / CELL_W);
+      rows = Math.ceil(innerHeight / CELL_H);
+      al = new Float32Array(cols * rows);
+      born = new Float64Array(cols * rows);
+      life = new Float32Array(cols * rows);
+      lines = Array.from({ length: rows }, () => (WORDS.length ? wordRow(cols) : ''));
+    }
+
+    // Returns true while anything is still visible or moving.
+    function step(now) {
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, innerWidth, innerHeight);
+      sx += (tx - sx) * FOLLOW; sy += (ty - sy) * FOLLOW;
+      const hs = Grid.holes();
+      const x0 = Math.max(0, Math.floor(sx / CELL_W) - R - 2), x1 = Math.min(cols, Math.floor(sx / CELL_W) + R + 3);
+      const y0 = Math.max(0, Math.floor(sy / CELL_H) - R - 2), y1 = Math.min(rows, Math.floor(sy / CELL_H) + R + 3);
+      ctx.font = '14px "IBM Plex Mono", ui-monospace, monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#8c8c8c';
+      let live = Math.abs(tx - sx) + Math.abs(ty - sy) > 0.5;
+      for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+          const i = y * cols + x;
+          let t = 0;
+          if (target && x >= x0 && x < x1 && y >= y0 && y < y1) {
+            const d = Math.hypot((x + 0.5) * CELL_W - sx, (y + 0.5) * CELL_H - sy) / CELL_W;
+            const k = Math.max(0, 1 - d / R);
+            t = k * k * k;
+          }
+          const a = al[i] += (t - al[i]) * (t > al[i] ? RISE : FALL);
+          if (a < 0.004) { al[i] = 0; born[i] = 0; continue; }
+          live = true;
+          if (hs.some(([h0, h1, h2, h3]) => x >= h0 && x < h2 && y >= h1 && y < h3)) continue;
+          if (!born[i]) { born[i] = now; life[i] = 220 + Math.random() * 520; }
+          let ch = lines[y][x] || ' ';
+          if (now - born[i] < life[i]) ch = DIGITS[(Math.random() * DIGITS.length) | 0];
+          else if (ch === ' ') continue; // word gap: settles blank
+          ctx.globalAlpha = PEAK * a;
+          ctx.fillText(ch, x * CELL_W + CELL_W / 2, y * CELL_H + CELL_H / 2 + 1);
+        }
+      }
+      ctx.globalAlpha = 1;
+      return live;
+    }
+
+    function loop(now) { raf = step(now) ? requestAnimationFrame(loop) : 0; }
+    const kick = () => { if (!raf) raf = requestAnimationFrame(loop); };
+
+    const on = () => !reduced();
+    addEventListener('pointermove', (e) => {
+      if (e.pointerType !== 'mouse' || !on()) return;
+      if (!target) { sx = e.clientX; sy = e.clientY; }
+      tx = e.clientX; ty = e.clientY; target = 1; kick();
+    });
+    document.documentElement.addEventListener('mouseleave', () => { target = 0; kick(); });
+    addEventListener('blur', () => { target = 0; kick(); });
+    addEventListener('hashchange', () => { if (!on()) { target = 0; kick(); } });
+    addEventListener('resize', size);
+    size();
+    return { off: () => { target = 0; kick(); } };
   })();
 
   // ---------- Layout helpers: character rules + big text ----------
@@ -357,7 +448,7 @@
   }
 
   // ---------- Sound ----------
-  // assets/audio/decrypt.m4a is the code-decrypting effect, cut from the
+  // assets/audio/decrypts.m4a is the code-decrypting effect, cut from the
   // reference clip with the voice removed. A synth fallback covers decode failures.
   // Browsers may block audio until the first tap or key press. If the load
   // animation is still running when that happens, the rest of it plays.
@@ -365,7 +456,7 @@
     const btn = $('#sound');
     let on = store.get('sound') !== 'off';
     let ac = null, out = null, buffer = null, pendingUntil = 0;
-    const raw = fetch('assets/audio/decrypt.m4a').then((r) => (r.ok ? r.arrayBuffer() : null)).catch(() => null);
+    const raw = fetch('assets/audio/decrypts.m4a').then((r) => (r.ok ? r.arrayBuffer() : null)).catch(() => null);
     let ready = Promise.resolve();
 
     function init() {
@@ -394,18 +485,20 @@
       if (ac && ac.state === 'suspended') ac.resume().then(flushPending).catch(() => {});
     }
 
+    const VOL = 1; // 
+    // Plays the file from its start for as long as the animation runs (capped at the file length).
     function clip(ms) {
-      const t = ac.currentTime + 0.01, d = Math.min(ms / 1000, buffer.duration - 0.05);
+      const t = ac.currentTime + 0.01, d = Math.min(ms / 1000, buffer.duration);
       const src = ac.createBufferSource();
       const g = ac.createGain();
       src.buffer = buffer;
-      const offset = Math.random() * Math.max(0, buffer.duration - d - 0.05);
-      g.gain.setValueAtTime(0, t);
-      g.gain.linearRampToValueAtTime(1, t + 0.015);
-      g.gain.setValueAtTime(1, t + Math.max(0.02, d - 0.2));
-      g.gain.linearRampToValueAtTime(0, t + d);
+      g.gain.setValueAtTime(VOL, t);
+      if (d < buffer.duration) { // cut early: 20 ms fade so the end doesn't click
+        g.gain.setValueAtTime(VOL, t + Math.max(0, d - 0.02));
+        g.gain.linearRampToValueAtTime(0, t + d);
+      }
       src.connect(g).connect(out);
-      src.start(t, offset, d + 0.02);
+      src.start(t, 0, d);
     }
 
     function synth(ms) {
@@ -508,6 +601,93 @@
     return el;
   }
 
+  // Project images: each picture starts as a field of scrambling digits, and every cell turns into
+  // a pixel of the image when the text row at its height locks in. Then the real image fades in.
+  function revealImages(root, job) {
+    const PH = CELL_H / 2; // two image pixels per text row
+    $$('.img-btn img', root).forEach((img) => {
+      img.loading = 'eager';
+      const box = img.getBoundingClientRect();
+      if (!box.width || !box.height) return;
+      const w = Math.round(box.width), h = Math.round(box.height);
+      const cols = Math.ceil(w / CELL_W), rows = Math.ceil(h / CELL_H);
+      const dpr = Math.min(devicePixelRatio || 1, 2);
+      const cv = document.createElement('canvas');
+      cv.className = 'img-fx';
+      cv.width = w * dpr; cv.height = h * dpr;
+      cv.setAttribute('aria-hidden', 'true');
+      const ctx = cv.getContext('2d');
+      ctx.scale(dpr, dpr);
+      img.parentElement.appendChild(cv);
+
+      // time each text-row cell locks, and one pixel colour per half-row
+      const lock = new Float32Array(cols * rows);
+      let end = 0;
+      for (let y = 0; y < rows; y++) {
+        const base = job.timeAtY(box.top + y * CELL_H);
+        for (let x = 0; x < cols; x++) { const t = base + Math.random() * T.jitter * 2; lock[y * cols + x] = t; if (t > end) end = t; }
+      }
+      let px = null;
+      const sample = () => {
+        const pc = document.createElement('canvas');
+        pc.width = cols; pc.height = rows * 2;
+        const c = pc.getContext('2d', { willReadFrequently: true });
+        const iw = img.naturalWidth, ih = img.naturalHeight;
+        if (!iw) return null;
+        const ar = w / h; // object-fit: cover
+        let sw = iw, sh = iw / ar;
+        if (sh > ih) { sh = ih; sw = ih * ar; }
+        c.drawImage(img, (iw - sw) / 2, (ih - sh) / 2, sw, sh, 0, 0, cols, rows * 2);
+        const d = c.getImageData(0, 0, cols, rows * 2).data, out = new Array(cols * rows * 2);
+        for (let i = 0; i < out.length; i++) {
+          let l = (0.299 * d[i * 4] + 0.587 * d[i * 4 + 1] + 0.114 * d[i * 4 + 2]);
+          l = clamp(((l / 255 - 0.5) * 1.08 + 0.5) * 0.92 * 255, 0, 255) | 0;
+          out[i] = `rgb(${l},${l},${l})`;
+        }
+        return out;
+      };
+      img.decode().catch(() => {}).then(() => { px = sample(); });
+
+      const start = performance.now();
+      let lastSwap = -1e9;
+      const glyph = new Array(cols * rows);
+      const frame = (now) => {
+        const el = now - start;
+        const swap = now - lastSwap > 50;
+        if (swap) lastSwap = now;
+        ctx.font = '14px "IBM Plex Mono", ui-monospace, monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        for (let y = 0; y < rows; y++) {
+          for (let x = 0; x < cols; x++) {
+            const i = y * cols + x;
+            const done = el >= lock[i] && px;
+            if (done ? glyph[i] === null : !swap && glyph[i] !== undefined) continue;
+            const X = x * CELL_W, Y = y * CELL_H;
+            ctx.fillStyle = '#000';
+            ctx.fillRect(X, Y, CELL_W, CELL_H);
+            if (done) {
+              glyph[i] = null;
+              ctx.fillStyle = px[(y * 2) * cols + x]; ctx.fillRect(X, Y, CELL_W, PH);
+              ctx.fillStyle = px[(y * 2 + 1) * cols + x]; ctx.fillRect(X, Y + PH, CELL_W, PH);
+            } else {
+              glyph[i] = pick(NOISE);
+              ctx.fillStyle = Math.random() < 0.12 ? '#ff7a2f' : '#8c8c8c';
+              ctx.fillText(glyph[i], X + CELL_W / 2, Y + CELL_H / 2 + 1);
+            }
+          }
+        }
+        if (el > end + 40 && px) {
+          cv.style.opacity = '0';
+          setTimeout(() => cv.remove(), 300);
+          return;
+        }
+        requestAnimationFrame(frame);
+      };
+      requestAnimationFrame(frame);
+    });
+  }
+
   async function show(id, first = false) {
     if (id === current) return;
     busy = true;
@@ -523,6 +703,7 @@
       main.style.visibility = '';
       el.classList.add('entering');
       const job = decryptIn(el, L.linesAt, L.linesBudget);
+      revealImages(el, job);
       // Rows outside the content settle on the same top-to-bottom schedule as the text.
       const lh = parseFloat(getComputedStyle($('p', el) || el).lineHeight) || 22;
       const greyRows = Math.max(2, Math.round((L.greyLines * lh) / CELL_H));
@@ -542,7 +723,9 @@
       const el = activate(id);
       el.classList.add('entering');
       Grid.refresh();
-      await decryptIn(el, 0, M.linesBudget).done;
+      const job = decryptIn(el, 0, M.linesBudget);
+      revealImages(el, job);
+      await job.done;
     }
 
     setTimeout(() => { const el = $('#' + id); if (el) el.classList.remove('entering'); }, 600);
@@ -596,7 +779,7 @@
   // ---------- Command input ----------
   // "/" opens a list of pages. ↑/↓ choose, Tab or Enter go, a click goes too.
   const Cmd = (() => {
-    const root = $('#cmd'), input = cmdInput, box = $('.cmd-box', $('#cmd')), list = $('#cmd-list'), msg = $('#cmd-msg'), hint = $('.cmd-hint', root);
+    const root = $('#cmd'), input = cmdInput, box = $('.cmd-box', $('#cmd')), list = $('#cmd-list'), msg = $('#cmd-msg');
     const COMMANDS = [
       { name: 'intro', id: 'intro', desc: 'Who I am' },
       { name: 'works', id: 'works', desc: 'All case studies' },
@@ -652,7 +835,6 @@
         return li;
       }));
       list.hidden = !items.length;
-      hint.hidden = !!items.length || document.activeElement !== input;
       input.setAttribute('aria-expanded', String(!!items.length));
       msg.textContent = typing && !items.length ? oops(input.value.trim()) : '';
       paint();
