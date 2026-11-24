@@ -1,89 +1,309 @@
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Md Shamsuddin | Product Designer</title>
-    <link rel="shortcut icon" href="./assets/favicon.jpg" type="image/jpg">
-    <!-- Site's Metadata -->
-    <meta property="og:title" content="Md Shamsuddin | Product Designer" />
-    <meta property="og:url" content="https://shamsdel.com/" />
-    <meta property="og:description" content="Digital product designer with 10 yrs of experience from Bangladesh." />
-    <meta property="og:image" content="https://i.ibb.co.com/K29dHQf/thumbnail.jpg" />
-    <meta property="og:image:height" content="627"/>
-    <meta property="og:type" content="website"/>
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.cdnfonts.com/css/satoshi" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Md Shamsuddin · Digital product designer</title>
+  <meta name="description" content="Md Shamsuddin is a digital product designer from Bangladesh with 10 years of experience. Head of Design at Shifl. Case studies: Shifl, Pathao, Boost.">
+  <meta name="author" content="Md Shamsuddin">
+  <meta name="theme-color" content="#000000">
+  <meta name="color-scheme" content="dark">
+  <link rel="canonical" href="https://heyshams.com/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://heyshams.com/">
+  <meta property="og:title" content="Md Shamsuddin · Digital product designer">
+  <meta property="og:description" content="I design products that are easy to use and good for business. 10 years, mostly with startups.">
+  <meta property="og:image" content="https://heyshams.com/assets/img/shams.jpg">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@shams4xp">
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23000'/%3E%3Ctext x='4' y='23' font-family='monospace' font-size='20' fill='%23ff7a2f'%3E&gt;_%3C/text%3E%3C/svg%3E">
+  <link rel="preload" href="assets/fonts/IBMPlexMono-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Md Shamsuddin",
+    "alternateName": "Shams",
+    "jobTitle": "Head of Design",
+    "worksFor": { "@type": "Organization", "name": "Shifl Inc." },
+    "description": "Digital product designer from Bangladesh with 10 years of experience.",
+    "url": "https://heyshams.com/",
+    "image": "https://heyshams.com/assets/img/shams.jpg",
+    "email": "mailto:mdshamsc@gmail.com",
+    "address": { "@type": "PostalAddress", "addressCountry": "BD" },
+    "sameAs": [
+      "https://www.linkedin.com/in/mdshamsc/",
+      "https://dribbble.com/scdelwar",
+      "https://x.com/shams4xp"
+    ]
+  }
+  </script>
+
+  <!-- Marks JS as available before first paint so screens don't flash stacked. -->
+  <script>document.documentElement.classList.add('js');</script>
+
+  <!-- Microsoft Clarity: paste your project ID below. Nothing loads while it is empty. -->
+  <script>
+    window.CLARITY_ID = "ziruip1b5j";
+    if (window.CLARITY_ID) {
+      (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window,document,"clarity","script",window.CLARITY_ID);
+    }
+  </script>
+  <script src="main.js" defer></script>
 </head>
 <body>
-    <section id="heroSec">
-        <div class="container hero">
-            <div class="title">
-                <h1>Hi! 👋 <br> I'm Md Shamsuddin</h1>
-                <p class="subtext">Partnering with startups in <mark>designing delightful user experiences</mark> that drive value, profitability, & growth. Currently Head of Design at <a href="https://www.linkedin.com/company/shifl" target="_blank">Shifl Inc.</a></p>
-            </div>
-            <!-- <div class="roll-btn">
-                <a href="#work-1">Recent Works<img src="./assets/arrow-down.svg" alt=""></a>
-            </div> -->
-        </div>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <!-- Full-screen character noise. Decorative only. -->
+  <canvas id="grid" aria-hidden="true"></canvas>
+
+  <header class="hud hud-top">
+    <a class="hud-brand" href="#intro" aria-label="heyshams.com, back to intro">HEYSHAMS.COM</a>
+    <nav class="topnav" aria-label="Sections">
+      <a href="#intro" data-key="i" data-nav="intro"><span class="k" aria-hidden="true">[I]</span> Intro</a>
+      <a href="#works" data-key="w" data-nav="work"><span class="k" aria-hidden="true">[W]</span> Work</a>
+      <a href="#contact" data-key="c" data-nav="contact"><span class="k" aria-hidden="true">[C]</span> Contact</a>
+    </nav>
+    <span class="hud-fill" aria-hidden="true"></span>
+    <span class="hud-controls">
+      <button id="sound" class="toggle" type="button" aria-pressed="true" hidden>
+        <span aria-hidden="true">[</span>Sound<span aria-hidden="true">:</span><span class="state" aria-hidden="true">ON</span><span aria-hidden="true">]</span>
+      </button>
+      <button id="hotkeys" class="toggle" type="button" aria-pressed="true" hidden>
+        <span aria-hidden="true">[</span>Keys<span aria-hidden="true">:</span><span class="state" aria-hidden="true">ON</span><span aria-hidden="true">]</span>
+        <span class="sr-only">(single-key shortcuts)</span>
+      </button>
+    </span>
+  </header>
+
+  <main id="main" tabindex="-1">
+
+    <!-- ===================== INTRO ===================== -->
+    <section id="intro" class="screen" aria-labelledby="intro-title">
+      <p class="prompt" aria-hidden="true">&gt; Hey! My name is</p>
+      <h1 id="intro-title" tabindex="-1">
+        <span class="sr-only">Hey, I'm Md Shamsuddin</span>
+        <span class="bigtext" data-max="13" aria-hidden="true">  ████████  ██      ██    ██████    ██      ██    ████████
+██          ██      ██  ██      ██  ████  ████  ██
+  ██████    ██████████  ██████████  ██  ██  ██    ██████
+        ██  ██      ██  ██      ██  ██      ██          ██
+████████    ██      ██  ██      ██  ██      ██  ████████</span>
+      </h1>
+      <p class="byline"><span class="hi">Md Shamsuddin</span> <span aria-hidden="true">·</span> Digital product designer <span aria-hidden="true">·</span> Bangladesh</p>
+
+      <p>I design products that are easy to use and good for business. I've been doing it for 10 years, mostly with startups. Right now I lead design at <a class="ul" href="https://www.linkedin.com/company/shifl" rel="noopener">Shifl Inc.</a></p>
+
+      <nav class="menu" aria-label="Intro">
+        <a class="opt" href="#shifl" data-key="enter 1"><span class="num" aria-hidden="true">1.</span> <span>At Shifl, I streamlined communication and shipment visibility, cutting unnecessary emails and calls by <mark>15%</mark>. <span class="tbtn" aria-hidden="true">[ View details ]</span><span class="sr-only">View details: Shifl case study</span></span></a>
+        <a class="opt" href="#works" data-key="w 2"><span class="num" aria-hidden="true">2.</span> View all works</a>
+        <a class="opt" href="#contact" data-key="c 3"><span class="num" aria-hidden="true">3.</span> Contact me</a>
+      </nav>
     </section>
 
-    <section id="work-1">
-        <div class="container work workBlock-1">
-            <div class="work-info">
-                <h2>Reduced 15% redundant communication</h2>
-                <p>I've led the design process of Shifl’s customer portal, streamlining various supply chain services into a digital platform. This simplified complex offline interactions, reducing unnecessary communication and errors significantly.</p>
-            </div>
-            <div class="work-imgs">
-                <img class="lg-img" src="./assets/work1-bg.jpg" alt="">
-                <img class="sm-img" src="./assets/work1-sm.jpg" alt="">
-            </div>
-        </div>
+    <!-- ===================== WORKS ===================== -->
+    <section id="works" class="screen" aria-labelledby="works-title">
+      <p class="prompt" aria-hidden="true">&gt; work --list</p>
+      <h2 id="works-title" tabindex="-1">Selected <mark>works</mark></h2>
+      <p>Three case studies from the last few years. Pick one to read it.</p>
+
+      <nav class="menu" aria-label="Works">
+        <a class="opt" href="#shifl" data-key="enter 1"><span class="num" aria-hidden="true">1.</span> Shifl <span class="dim" aria-hidden="true">·</span> Customer portal</a>
+        <a class="opt" href="#pathao" data-key="2"><span class="num" aria-hidden="true">2.</span> Pathao <span class="dim" aria-hidden="true">·</span> App home screen</a>
+        <a class="opt" href="#boost" data-key="3"><span class="num" aria-hidden="true">3.</span> Boost <span class="dim" aria-hidden="true">·</span> Merchant portal</a>
+      </nav>
     </section>
 
-    <section id="work-2">
-        <div class="container work workBlock-2">
-            <div class="work-info">
-                <h2>Improved cross-selling &  retention rate</h2>
-                <p>I redesigned Pathao’s landing screen with improved navigation, delightful interactions, and better accessibility. This attracted customers to try new services and encouraged them to return for regular service requests.</p>
-            </div>
-            <div class="work-imgs">
-                <img class="lg-img" src="./assets/work2-bg.jpg" alt="">
-                <img class="sm-img" src="./assets/work2-sm.jpg" alt="">
-            </div>
-        </div>
+    <!-- ===================== PROJECT 1 ===================== -->
+    <section id="shifl" class="screen project" aria-labelledby="shifl-title">
+      <p class="prompt" aria-hidden="true">&gt; work 01/03</p>
+      <h2 id="shifl-title" tabindex="-1">Cut unnecessary emails and calls by <mark>15%</mark></h2>
+      <dl class="meta">
+        <div><dt>Client</dt><dd>Shifl Inc.</dd></div>
+        <div><dt>Project</dt><dd>Customer portal</dd></div>
+        <div><dt>Result</dt><dd>15% fewer unnecessary emails and calls</dd></div>
+      </dl>
+      <p class="rule" data-char="-" aria-hidden="true"></p>
+
+      <p>Shifl's customers tracked shipments through calls and emails. I led the design of a customer portal that puts shipment updates and key services in one place.</p>
+      <p>Customers can now see where their cargo is without asking. Fewer manual handoffs meant fewer errors, and unnecessary emails and calls dropped by 15%.</p>
+
+      <div class="shots">
+        <figure class="shot">
+          <button class="img-btn" type="button" data-full="assets/img/work1-bg.jpg">
+            <img src="assets/img/work1-bg.jpg" width="858" height="644" loading="lazy" decoding="async" alt="Shifl customer portal on a laptop: a shipment page with cargo details, delivery location and a milestone tracker.">
+            <span class="sr-only">(enlarge)</span>
+          </button>
+          <figcaption><span class="dim">FIG.01A</span> Shipment details</figcaption>
+        </figure>
+        <figure class="shot">
+          <button class="img-btn" type="button" data-full="assets/img/work1-sm.jpg">
+            <img src="assets/img/work1-sm.jpg" width="558" height="344" loading="lazy" decoding="async" alt="Shifl customer portal on a laptop: the shipments list with a Generate booking link dialog open.">
+            <span class="sr-only">(enlarge)</span>
+          </button>
+          <figcaption><span class="dim">FIG.01B</span> Booking links</figcaption>
+        </figure>
+      </div>
+
+      <nav class="menu" aria-label="Next">
+        <a class="opt" href="#pathao" data-key="enter n 1"><span class="num" aria-hidden="true">1.</span> Next project: Pathao</a>
+        <a class="opt" href="#contact" data-key="c 2"><span class="num" aria-hidden="true">2.</span> Contact me</a>
+        <a class="opt" href="#intro" data-key="r 3"><span class="num" aria-hidden="true">3.</span> Restart</a>
+      </nav>
     </section>
 
-    <section id="work-3">
-        <div class="container work workBlock-3">
-            <div class="work-info">
-                <h2>Increased revenue & Customer satisfaction</h2>
-                <p>I rebuilt the entire information architecture and UI library for the Boost Merchant portal, creating a smoother experience and more efficient workflow. This led to an increase in paid customers.</p>
-            </div>
-            <div class="work-imgs">
-                <img class="lg-img" src="./assets/work3-bg.jpg" alt="">
-                <img class="sm-img" src="./assets/work3-sm.jpg" alt="">
-            </div>
-        </div>
+    <!-- ===================== PROJECT 2 ===================== -->
+    <section id="pathao" class="screen project" aria-labelledby="pathao-title">
+      <p class="prompt" aria-hidden="true">&gt; work 02/03</p>
+      <h2 id="pathao-title" tabindex="-1">More <mark>cross-selling</mark>, better retention</h2>
+      <dl class="meta">
+        <div><dt>Client</dt><dd>Pathao</dd></div>
+        <div><dt>Project</dt><dd>App home screen</dd></div>
+        <div><dt>Result</dt><dd>More cross-selling and repeat use</dd></div>
+      </dl>
+      <p class="rule" data-char="-" aria-hidden="true"></p>
+
+      <p>Pathao's home screen is where people choose a ride, food or a parcel. I redesigned it with clearer navigation, small moments of delight and better accessibility.</p>
+      <p>More customers tried new services, and more came back for the ones they use every week.</p>
+
+      <div class="shots">
+        <figure class="shot">
+          <button class="img-btn" type="button" data-full="assets/img/work2-bg.jpg">
+            <img src="assets/img/work2-bg.jpg" width="858" height="636" loading="lazy" decoding="async" alt="Two phones showing the Pathao app: an offers screen and the redesigned home screen with shortcuts for bike, car, food and parcel.">
+            <span class="sr-only">(enlarge)</span>
+          </button>
+          <figcaption><span class="dim">FIG.02A</span> Home and offers</figcaption>
+        </figure>
+        <figure class="shot">
+          <button class="img-btn" type="button" data-full="assets/img/work2-sm.jpg">
+            <img src="assets/img/work2-sm.jpg" width="558" height="344" loading="lazy" decoding="async" alt="Pathao app on a phone with the All services sheet open: bike, car, food, parcel, shop, health and more.">
+            <span class="sr-only">(enlarge)</span>
+          </button>
+          <figcaption><span class="dim">FIG.02B</span> All services</figcaption>
+        </figure>
+      </div>
+
+      <nav class="menu" aria-label="Next">
+        <a class="opt" href="#boost" data-key="enter n 1"><span class="num" aria-hidden="true">1.</span> Next project: Boost</a>
+        <a class="opt" href="#contact" data-key="c 2"><span class="num" aria-hidden="true">2.</span> Contact me</a>
+        <a class="opt" href="#intro" data-key="r 3"><span class="num" aria-hidden="true">3.</span> Restart</a>
+      </nav>
     </section>
 
-    <footer>
-        <div class="container footerDiv">
-            <div class="footer-info">
-                <h2>Let’s talk & <br>bring your idea to life.</h2>
-                <div class="contact-btn">
-                    <a href="mailto:mdshamsc@gmail.com"><button>Let’s Talk</button></a>
-                    <a href="./assets/Md-Shamsuddin-Resume.pdf" target="_blank"><button class="secondary-btn">View Resume</button></a>
-                </div>
-                <div class="socials">
-                    <a href="https://x.com/shams4xp">X(Twitter)<img src="./assets/arrow-up-right.svg" alt=""></a>
-                    <a href="https://www.linkedin.com/in/mdshamsc/">LinkedIn<img src="./assets/arrow-up-right.svg" alt=""></a>
-                    <a href="https://dribbble.com/scdelwar">Dribbble<img src="./assets/arrow-up-right.svg" alt=""></a>
-                </div>
-            </div>
-        </div>
-    </footer>   
+    <!-- ===================== PROJECT 3 ===================== -->
+    <section id="boost" class="screen project" aria-labelledby="boost-title">
+      <p class="prompt" aria-hidden="true">&gt; work 03/03</p>
+      <h2 id="boost-title" tabindex="-1">More <mark>paying merchants</mark>, and happier ones</h2>
+      <dl class="meta">
+        <div><dt>Client</dt><dd>Boost</dd></div>
+        <div><dt>Project</dt><dd>Merchant portal</dd></div>
+        <div><dt>Result</dt><dd>More paying merchants</dd></div>
+      </dl>
+      <p class="rule" data-char="-" aria-hidden="true"></p>
+
+      <p>I rebuilt the information architecture and UI library for Boost's merchant portal. Everyday work like managing inventory and listings got faster and easier to follow.</p>
+      <p>Merchants were happier, and more of them became paying customers.</p>
+
+      <div class="shots">
+        <figure class="shot">
+          <button class="img-btn" type="button" data-full="assets/img/work3-bg.jpg">
+            <img src="assets/img/work3-bg.jpg" width="858" height="638" loading="lazy" decoding="async" alt="Boost merchant portal on a laptop: an inventory table with products, quantities, locations and prices.">
+            <span class="sr-only">(enlarge)</span>
+          </button>
+          <figcaption><span class="dim">FIG.03A</span> Inventory</figcaption>
+        </figure>
+        <figure class="shot">
+          <button class="img-btn" type="button" data-full="assets/img/work3-sm.jpg">
+            <img src="assets/img/work3-sm.jpg" width="558" height="344" loading="lazy" decoding="async" alt="Boost merchant portal on a laptop: the settings page with a table of data exports.">
+            <span class="sr-only">(enlarge)</span>
+          </button>
+          <figcaption><span class="dim">FIG.03B</span> Data exports</figcaption>
+        </figure>
+      </div>
+
+      <nav class="menu" aria-label="Next">
+        <a class="opt" href="#shifl" data-key="enter n 1"><span class="num" aria-hidden="true">1.</span> Next project: Shifl</a>
+        <a class="opt" href="#contact" data-key="c 2"><span class="num" aria-hidden="true">2.</span> Contact me</a>
+        <a class="opt" href="#intro" data-key="r 3"><span class="num" aria-hidden="true">3.</span> Restart</a>
+      </nav>
+    </section>
+
+    <!-- ===================== CONTACT ===================== -->
+    <section id="contact" class="screen" aria-labelledby="contact-title">
+      <p class="prompt" aria-hidden="true">&gt; contact --open</p>
+      <h2 id="contact-title" tabindex="-1">
+        <span class="sr-only">Let's talk</span>
+        <span class="bigtext bigtext--white" data-max="13" aria-hidden="true"></span>
+      </h2>
+
+      <p class="rule" data-char="-" aria-hidden="true"></p>
+
+      <div class="contact-intro">
+        <button class="img-btn portrait" type="button" data-full="assets/img/shams.jpg">
+          <img class="ascii" src="assets/img/shams-ascii.png" width="500" height="499" loading="lazy" decoding="async" alt="" aria-hidden="true">
+          <img class="real" src="assets/img/shams.jpg" width="1112" height="1111" loading="lazy" decoding="async" alt="Md Shamsuddin smiling, wearing a black t-shirt, on an orange background.">
+          <span class="sr-only">(enlarge)</span>
+        </button>
+      </div>
+
+      <p class="rule" data-char="-" aria-hidden="true"></p>
+      <dl class="meta links">
+        <div><dt>Email</dt><dd><a href="mailto:mdshamsc@gmail.com">mdshamsc@gmail.com</a></dd></div>
+        <div><dt>Résumé</dt><dd><a href="assets/Md-Shamsuddin-Resume.pdf" target="_blank" rel="noopener">Md-Shamsuddin-Resume.pdf</a> <span class="dim">(1 MB, new tab)</span></dd></div>
+        <div><dt>LinkedIn</dt><dd><a href="https://www.linkedin.com/in/mdshamsc/" rel="noopener">in/mdshamsc</a></dd></div>
+        <div><dt>Dribbble</dt><dd><a href="https://dribbble.com/scdelwar" rel="noopener">scdelwar</a></dd></div>
+        <div><dt>X</dt><dd><a href="https://x.com/shams4xp" rel="noopener">@shams4xp</a></dd></div>
+      </dl>
+
+      <nav class="menu" aria-label="Contact">
+        <p class="ask">Got an idea you want to bring to life? Let me hear that as your design partner.</p>
+        <a class="opt" href="mailto:mdshamsc@gmail.com" data-key="enter e 1"><span class="num" aria-hidden="true">1.</span> Email me</a>
+        <a class="opt" href="assets/Md-Shamsuddin-Resume.pdf" target="_blank" rel="noopener" data-key="2"><span class="num" aria-hidden="true">2.</span> View résumé<span class="sr-only"> (PDF, opens in new tab)</span></a>
+        <a class="opt" href="#intro" data-key="r 3"><span class="num" aria-hidden="true">3.</span> Restart</a>
+      </nav>
+
+    </section>
+  </main>
+
+  <!-- Command input. JS moves it to the end of whichever screen is showing. -->
+  <div class="cmd" id="cmd" hidden>
+    <div class="cmd-box">
+      <span class="cmd-prompt" aria-hidden="true">❯</span>
+      <span class="num" aria-hidden="true">4.</span>
+      <input id="cmd-input" class="cmd-input" type="text" role="combobox" aria-label="Go to a page. Type a slash for commands."
+        aria-expanded="false" aria-controls="cmd-list" aria-autocomplete="list" autocomplete="off" autocapitalize="off"
+        autocorrect="off" spellcheck="false" enterkeyhint="go" placeholder="Type / for commands">
+    </div>
+    <ul id="cmd-list" class="cmd-list" role="listbox" aria-label="Commands" hidden></ul>
+    <p class="cmd-hint" aria-hidden="true">/ for commands · ↑↓ to select · Tab or Enter to go</p>
+    <p id="cmd-msg" class="cmd-msg" role="status"></p>
+  </div>
+
+  <footer class="hud hud-bottom">
+    <span class="path" id="path" aria-label="Current location">~root/</span>
+    <span class="hud-fill" aria-hidden="true"></span>
+    <a class="mail" href="mailto:mdshamsc@gmail.com">mdshamsc@gmail.com</a>
+  </footer>
+
+  <!-- Full-size image viewer -->
+  <dialog id="viewer" aria-labelledby="viewer-caption">
+    <div class="viewer-inner">
+     <div class="viewer-col">
+      <div class="viewer-top">
+        <span class="dim" aria-hidden="true">&gt; view --full</span>
+        <button id="viewer-close" class="opt is-sel" type="button">Close <span class="dim" aria-hidden="true">(Esc)</span></button>
+      </div>
+      <img id="viewer-img" src="data:," alt="">
+      <p id="viewer-caption"></p>
+     </div>
+    </div>
+  </dialog>
 </body>
 </html>

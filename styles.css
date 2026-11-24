@@ -1,0 +1,438 @@
+/* ---------- Fonts (self-hosted, SIL Open Font License) ---------- */
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("assets/fonts/IBMPlexMono-400.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("assets/fonts/IBMPlexMono-600.woff2") format("woff2");
+  font-weight: 600;
+  font-display: swap;
+}
+
+/* ---------- Tokens ---------- */
+:root {
+  --bg: #000;
+  --text: #ececec;     /* main copy */
+  --dim: #9a9a9a;      /* meta and subtext, 7.4:1 on black */
+  --faint: #4a4a4a;    /* decorative rules only */
+  --orange: #ff7a2f;   /* accent + actions, 8.1:1 on black; black on it is 8.1:1 */
+  --teal: #32d6c4;     /* used once: the live status dot */
+  --fs: 15px;          /* the one text size (big block titles are the exception) */
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  /* Block glyphs come from the system mono font so spaces and blocks share one width. */
+  --blocks: ui-monospace, "SFMono-Regular", Menlo, Consolas, "DejaVu Sans Mono", "Liberation Mono", monospace;
+  --measure: 80ch;
+}
+
+* { box-sizing: border-box; }
+
+html { background: var(--bg); color-scheme: dark; scroll-padding: 48px 0 64px; }
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  color: var(--text);
+  background: var(--bg);
+  font: 400 var(--fs)/1.75 var(--mono);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, p, dl, figure, figcaption, button, a { font-size: inherit; }
+p, dd, figcaption, h2, .opt { text-wrap: pretty; }
+
+a { color: var(--orange); text-underline-offset: 4px; text-decoration-thickness: 1px; }
+a:hover { color: var(--text); }
+a.ul, a.ul:hover { color: inherit; text-decoration: underline; }
+
+mark { background: none; color: var(--orange); }
+
+p { margin: 0 0 1.1em; }
+
+.dim { color: var(--dim); }
+.hi { color: var(--text); font-weight: 600; }
+
+.sr-only {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+/* ---------- Focus ---------- */
+:focus { outline: none; }
+:focus-visible { outline: 1px dashed var(--orange); outline-offset: 4px; }
+[tabindex="-1"]:focus-visible { outline: none; }
+
+.skip {
+  position: fixed;
+  top: 8px; left: 8px;
+  z-index: 50;
+  padding: 2px 1ch;
+  background: var(--orange);
+  color: var(--bg);
+  text-decoration: none;
+  transform: translateY(-300%);
+}
+.skip:focus { transform: none; }
+
+/* ---------- Canvas noise ---------- */
+#grid {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ---------- HUD (top nav + footer) ---------- */
+.hud {
+  position: fixed;
+  left: 0; right: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 2ch;
+  padding: 6px 16px;
+  line-height: 1.6;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--dim);
+  background: var(--bg);
+  white-space: nowrap;
+}
+.hud a { text-decoration: none; }
+.hud-top { top: 0; }
+.hud-bottom { bottom: 0; }
+.hud-brand { color: var(--text); font-weight: 600; }
+.hud-brand:hover { color: var(--orange); }
+.hud-fill { flex: 1; overflow: hidden; color: var(--faint); }
+.hud-fill::before { content: "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"; }
+
+.topnav { display: flex; gap: 2ch; }
+.topnav a { color: var(--dim); }
+.topnav a:hover { color: var(--orange); }
+.topnav a[aria-current="page"] { color: var(--text); }
+.topnav a[aria-current="page"] .k { color: var(--orange); }
+
+.hud-controls { display: flex; gap: 1.5ch; }
+.toggle {
+  font: inherit;
+  color: var(--dim);
+  background: none;
+  border: 0;
+  padding: 4px 0;
+  min-height: 32px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: inherit;
+}
+.toggle .state { color: var(--text); }
+.toggle[aria-pressed="false"] .state { color: var(--dim); }
+.toggle:hover { color: var(--orange); }
+
+.mail { color: var(--orange); text-transform: none; letter-spacing: 0; }
+.mail:hover { color: var(--text); }
+
+/* ---------- Stage ---------- */
+main {
+  position: relative;
+  z-index: 1;
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  place-items: center;
+  padding: 64px 16px;
+}
+
+.screen {
+  width: min(var(--measure), 100%);
+  padding: 32px 3ch;
+}
+
+/* With JS: one screen at a time. Without JS: plain stacked document. */
+html.js .screen { display: none; }
+html.js .screen.is-active { display: block; }
+html:not(.js) main { display: block; }
+html:not(.js) .screen { margin: 0 auto 48px; }
+html:not(.js) .hud-controls { display: none; }
+
+.path { color: var(--text); white-space: nowrap; }
+
+/* ---------- Type: one size everywhere ---------- */
+h1, h2 {
+  margin: 0 0 1.25em;
+  font-weight: 600;
+  line-height: 1.6;
+  color: var(--text);
+}
+.project h2 { margin-bottom: 1em; }
+
+.prompt { margin: 0 0 1em; color: var(--dim); }
+.byline { margin-bottom: 1.5em; color: var(--dim); }
+.byline .hi { color: var(--text); }
+
+.bigtext {
+  display: block;
+  font-family: var(--blocks);
+  font-size: 14px;          /* JS scales this to fit */
+  font-weight: 400;
+  line-height: 1;
+  white-space: pre;
+  color: var(--orange);
+  overflow: hidden;
+}
+
+.bigtext--white { color: var(--text); }
+
+.rule {
+  margin: 1.75em 0;
+  overflow: hidden;
+  white-space: pre;
+  line-height: 1;
+  color: var(--faint);
+  user-select: none;
+}
+/* Fallback before JS fills the exact width. */
+.rule:empty::before { content: "--------------------------------------------------------------------------------------------------------------------------------------------"; }
+
+.rule[data-char="·"]:empty::before { content: "············································································································································"; }
+
+/* ---------- Meta tables ---------- */
+.meta { margin: 0; display: grid; gap: .15em; }
+.meta div { display: grid; grid-template-columns: 10ch 1fr; gap: 1ch; }
+.meta dt { color: var(--dim); text-transform: uppercase; letter-spacing: .04em; white-space: nowrap; }
+.meta dt::after { content: " :"; }
+.meta dd { margin: 0; }
+.links { gap: .4em; }
+
+/* ---------- Actions ---------- */
+/* Option list, like Claude Code's selection prompts: a vertical list where
+   the selected row gets a ❯ pointer and the accent color. */
+.menu {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .15em;
+  margin: 3.25em 0 0;
+  padding: .5em 2ch 0;
+  border-top: 1px solid var(--dim);
+}
+html:not(.js) .menu { padding-bottom: .5em; border-bottom: 1px solid var(--dim); }
+.opt {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 1ch;
+  min-height: 32px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+.opt::before {
+  content: "❯";
+  width: 1ch;
+  font-family: var(--blocks);
+  visibility: hidden;
+}
+.opt .num { color: var(--dim); }
+.opt.is-sel, .opt:focus-visible { color: var(--orange); outline: none; }
+.opt.is-sel::before, .opt:focus-visible::before { visibility: visible; }
+.opt.is-sel .num, .opt:focus-visible .num { color: var(--orange); }
+html:not(.js) .opt::before { display: none; }
+/* Text action: bracketed, no fill. */
+.tbtn {
+  color: var(--orange);
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.tbtn:hover { color: var(--text); }
+/* Hide letter hints when single-key shortcuts are off. */
+.no-hotkeys .topnav .k { display: none; }
+
+/* ---------- Command input (Claude Code style) ---------- */
+.cmd { width: min(var(--measure), 100%); margin: 0 auto; padding: 0 3ch 32px; }
+.screen > .cmd { width: auto; margin: 0; padding: 0; }
+.cmd[hidden] { display: none; }
+.cmd p { margin: 0; }
+/* The type row is the last row of the option list: same pointer, number and
+   spacing. Only a top (the menu's) and bottom border, square. */
+.cmd-box {
+  display: flex;
+  align-items: baseline;
+  gap: 1ch;
+  min-height: 32px;
+  padding: 0 2ch .5em;
+  border: 0;
+  border-bottom: 1px solid var(--dim);
+  border-radius: 0;
+  cursor: text;
+}
+.cmd-prompt { width: 1ch; font-family: var(--blocks); color: var(--orange); visibility: hidden; }
+.cmd-box .num { color: var(--dim); }
+.cmd-box:focus-within .cmd-prompt { visibility: visible; }
+.cmd-box:focus-within .num { color: var(--orange); }
+.cmd-input {
+  flex: 1;
+  min-width: 0;
+  min-height: 30px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  caret-color: var(--orange); /* blinks inline once the row is selected */
+}
+.cmd-input:focus-visible { outline: none; }
+.cmd-input::placeholder { color: var(--dim); opacity: 1; }
+.cmd-list { list-style: none; margin: .6em 0 0; padding: 0 2ch; }
+.cmd-opt {
+  display: flex;
+  align-items: baseline;
+  gap: 1ch;
+  min-height: 30px;
+  cursor: pointer;
+}
+.cmd-opt::before { content: "❯"; width: 1ch; font-family: var(--blocks); visibility: hidden; }
+.cmd-name { flex: 0 0 11ch; color: var(--text); }
+.cmd-desc { min-width: 0; color: var(--dim); }
+.cmd-opt.is-sel::before { visibility: visible; color: var(--orange); }
+.cmd-opt.is-sel .cmd-name, .cmd-opt.is-sel .cmd-desc { color: var(--orange); }
+.cmd-hint { margin-top: .6em; padding: 0 2ch; color: var(--dim); }
+.cmd-hint[hidden] { display: none; }
+.cmd-msg { padding: 0 2ch; color: var(--orange); }
+.cmd-msg:not(:empty) { margin-top: .6em; }
+
+/* ---------- Images: black & white until hover ---------- */
+.shots {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+  gap: 2ch;
+  margin: 2em 0 0;
+}
+.shot { margin: 0; }
+.img-btn {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+}
+.img-btn img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.08) brightness(.92);
+  transition: filter .35s ease;
+}
+.img-btn:hover img, .img-btn:focus-visible img { filter: none; }
+.shot figcaption { margin-top: .5em; color: var(--text); }
+
+.contact-intro { margin: 2em 0 0; }
+.menu .ask { margin: 0 0 .6em; padding: 0; color: var(--text); }
+/* ASCII portrait by default; the real photo (black & white) shows on hover/focus. */
+.portrait { width: min(50%, 320px); display: grid; }
+.portrait img { grid-area: 1 / 1; aspect-ratio: 1 / 1; }
+.portrait .real { opacity: 0; transition: opacity .35s ease; }
+.portrait:hover .real, .portrait:focus-visible .real { opacity: 1; filter: grayscale(1) contrast(1.08) brightness(.92); }
+.portrait .ascii { filter: none; }
+@media (hover: none) { .portrait .real { opacity: 0; } }
+
+/* reveal images with a stepped wipe while text decrypts */
+.screen.entering .img-btn img { animation: wipe .5s steps(8) .4s both; }
+@keyframes wipe { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0); } }
+
+/* ---------- Viewer ---------- */
+dialog {
+  width: 100vw; height: 100dvh;
+  max-width: none; max-height: none;
+  margin: 0; padding: 0;
+  border: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+dialog::backdrop { background: var(--bg); }
+.viewer-inner {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
+  padding: 16px;
+}
+/* Column hugs the image, so the top bar and caption line up with its edges. */
+.viewer-col {
+  width: fit-content;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+.viewer-top {
+  width: 0;
+  min-width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+#viewer-img {
+  display: block;
+  --ar: 1.5;
+  /* Fill the viewport: as wide as fits, without pushing past the height. */
+  width: min(1400px, 100vw - 32px, (100dvh - 128px) * var(--ar));
+  height: auto;
+  aspect-ratio: var(--ar);
+  object-fit: contain;
+}
+#viewer-caption { width: 0; min-width: 100%; margin: 0; color: var(--dim); }
+
+/* ---------- Small screens ---------- */
+@media (max-width: 760px) {
+  .hud-brand, .hud-top .hud-fill { display: none; }
+  .hud-top { justify-content: space-between; }
+}
+@media (max-width: 640px) {
+  :root { --fs: 14px; }
+  main { padding: 56px 12px 84px; }
+  .screen { padding: 24px 1ch; }
+  .hud { padding: 6px 12px; gap: 1.5ch; }
+  .topnav { gap: 1.5ch; }
+  .topnav .k { display: none; }
+  .hud-bottom { flex-wrap: wrap; row-gap: 0; }
+  .hud-bottom .hud-fill, .m-hide { display: none; }
+  .shots { grid-template-columns: 1fr; gap: 1.5em; }
+  .cmd-opt { flex-wrap: wrap; row-gap: 0; }
+  .cmd-name { flex-basis: 9ch; }
+  .cmd-desc { flex-basis: 100%; padding-left: 2ch; }
+}
+/* 16px stops iOS zooming in when the field is focused. */
+@media (pointer: coarse) { .cmd-input { font-size: 16px; } }
+/* No physical keyboard: the shortcut toggle has nothing to control. */
+@media (hover: none) and (pointer: coarse) {
+  #hotkeys { display: none; }
+}
+
+/* ---------- Preferences ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .live { animation: none; }
+  .img-btn img, .portrait .real { transition: none; }
+  .screen.entering .img-btn img { animation: none; }
+}
+@media (forced-colors: active) {
+  .opt.is-sel, .cmd-opt.is-sel { color: Highlight; }
+  :focus-visible { outline: 2px solid Highlight; }
+  mark { color: Highlight; }
+}

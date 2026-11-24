@@ -1,0 +1,8 @@
+<!doctype html><body style="margin:0;background:#222">
+<video id="v" src="ref.mp4" muted playsinline style="display:none"></video>
+<div id="g" style="display:flex;flex-wrap:wrap;gap:4px"></div>
+<script>
+const v=document.getElementById('v'),g=document.getElementById('g');
+window.grab=async(times,w=390)=>{g.innerHTML='';for(const t of times){await new Promise(r=>{v.onseeked=r;v.currentTime=t});const c=document.createElement('canvas');c.width=w;c.height=Math.round(w*v.videoHeight/v.videoWidth);c.getContext('2d').drawImage(v,0,0,c.width,c.height);const d=document.createElement('div');d.style.cssText='position:relative';const l=document.createElement('span');l.textContent=t.toFixed(2)+'s';l.style.cssText='position:absolute;left:2px;top:2px;background:#f0f;color:#fff;font:11px monospace;padding:1px 3px';d.append(c,l);g.append(d);}return [v.duration,v.videoWidth,v.videoHeight];};
+v.onloadedmetadata=()=>document.title='ready '+v.duration;
+</script>

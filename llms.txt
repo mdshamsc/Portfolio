@@ -1,0 +1,19 @@
+# Md Shamsuddin
+
+> Digital product designer from Bangladesh with 10 years of experience, mostly with startups. Head of Design at Shifl Inc. Designs products that are easy to use and good for business.
+
+Everything on https://heyshams.com/ is in the HTML of a single page. Each section has an id you can link to: #intro, #works, #shifl, #pathao, #boost, #contact.
+
+## Work
+
+- [Shifl customer portal](https://heyshams.com/#shifl): Led the design of a customer portal that puts shipment updates and key services in one place. Cut unnecessary emails and calls by 15% and reduced errors.
+- [Pathao home screen](https://heyshams.com/#pathao): Redesigned the super app's home screen with clearer navigation, small moments of delight and better accessibility. Improved cross-selling and retention.
+- [Boost merchant portal](https://heyshams.com/#boost): Rebuilt the information architecture and UI library. Merchants worked faster, satisfaction went up, and more merchants became paying customers.
+
+## Contact
+
+- Email: mdshamsc@gmail.com
+- [Résumé (PDF)](https://heyshams.com/assets/Md-Shamsuddin-Resume.pdf)
+- [LinkedIn](https://www.linkedin.com/in/mdshamsc/)
+- [Dribbble](https://dribbble.com/scdelwar)
+- [X](https://x.com/shams4xp)
